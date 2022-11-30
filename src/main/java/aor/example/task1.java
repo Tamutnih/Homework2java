@@ -49,7 +49,7 @@ public class task1 {
                 if (i != 2) {
                     sqlText.append(" AND ");
                 }
-                // System.out.println(text[i]);
+                System.out.println(text[i]);
             }
         }
         System.out.println(sqlText.toString());

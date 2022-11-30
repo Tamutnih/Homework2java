@@ -1,83 +1,75 @@
+// В файле содержится строка с данными:
+
+// [{"фамилия":"Иванов","оценка":"5","предмет":"Математика"},{"фамилия":"Петрова","оценка":"4","предмет":"Информатика"},{"фамилия":"Краснов","оценка":"5","предмет":"Физика"}]
+
+// Напишите метод,который разберёт её на составные части и,используя StringBuilder создаст массив строк такого вида:
+
+// Студент Иванов получил 5 по предмету Математика.Студент Петрова получил 4 по предмету Информатика.Студент Краснов получил 5 по предмету Физика.
 
 package aor.example;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
 public class task3 {
+    public static String getLineOffile(String fileName) {
+        String strOffile = null;
+        try {
+            File file = new File(fileName);
+            FileReader fr = new FileReader(file);
+            BufferedReader reader = new BufferedReader(fr);
+            strOffile = reader.readLine();
+
+            reader.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return strOffile;
+    }
+
+    private static String[][] jsnparsetoarray(String jsnstr) {
+        String line = jsnstr.substring(1, jsnstr.length() - 1);
+        String[] jsnarray = line.split(", ");
+        String[][] jsnarrayofBase = new String[jsnarray.length][3];
+        for (int i = 0; i < jsnarray.length; i++) {
+            line = jsnarray[i].substring(1, jsnarray[i].length() - 1);
+            for (int j = 0; j < 3; j++) {
+                String[] minJsnarray = line.split(",");
+                String[] microJsnarray = minJsnarray[j].split(":");
+                jsnarrayofBase[i][j] = microJsnarray[1].substring(1, microJsnarray[1].length() - 1);
+
+            }
+        }
+        return jsnarrayofBase;
+    }
+
+    private static String[] gluing_strings(String[][] arraystr) {
+        String[] gluing_str = new String[arraystr.length];
+        StringBuilder Newstr = new StringBuilder();
+        for (int i = 0; i < arraystr.length; i++) {
+            Newstr.append("Student ");
+            Newstr.append(arraystr[i][0]);
+            Newstr.append(" earned  ");
+            Newstr.append(arraystr[i][1]);
+            Newstr.append(" subject ");
+            Newstr.append(arraystr[i][2]);
+            gluing_str[i] = Newstr.toString();
+            Newstr.delete(0, Newstr.length());
+        }
+        return gluing_str;
+    }
 
     public static void main(String[] args) {
-
-        {
-            StringBuilder returnString = new StringBuilder();
-            returnString.Append("Фамилия: " + lastName + '\n');
-            returnString.Append("Имя: " + firstName + '\n');
-            String mark1;
-            returnString.Append("Оценки\nПервая: " + mark1 + "\nВторая: " + mark2 + "\nТретья: " + mark3);
-
-            return returnString.ToString();
-        }
-
+        String strjsn_offile = getLineOffile("3.jsn");
+        System.out.println(strjsn_offile);
+        String[] array = gluing_strings(jsnparsetoarray(strjsn_offile));
+        for (int i = 0; i < array.length; i++)
+            System.out.println(array[i]);
     }
-
-    static int stringCount() {
-        StreamReader fin = new StreamReader("data.txt", Encoding.Default);
-
-        int i = 0;
-        while (!fin.EndOfStream) {
-            fin.ReadLine();
-            i++;
-        }
-        return i;
-    }
-
-    static void readFromFile(ref Student[] st)
-        { 
-            StreamReader fin = new StreamReader("data.txt", Encoding.Default);
- 
-            int i = 0;
-            while (!fin.EndOfStream)
-            {
-                char[] sep = { ';' };
-                string st2 = fin.ReadLine(); // чтение строки из файла
-                if (st2.Length > 1) // Если строка не пуста
-                {
-                    string[] pole = st2.Split(sep);// разделяем ее на поля, отделенные ";"
- 
-                    // присвоение элементов массива pole полям массива структур
-                    st[i].lastName = pole[0];
-                    st[i].firstName = pole[1];
- 
-                    // с преобразованием некоторых строк и числа
-                    st[i].mark1 = int.Parse(pole[2]);
-                    st[i].mark2 = int.Parse(pole[3]);
-                    st[i].mark3 = int.Parse(pole[4]);
- 
-                    i++;
-                }
-            }
-        }
-
-    static void sort(ref Student[] st)
-        {
-            for (int i = 0; i < st.Length; i++)
-            {
-                for (int j = 0; j < st.Length - i - 1; j++)
-                {
-                    if (st[j].mark1 < st[j + 1].mark1)
-                    {
-                        Student temp = st[j];
-                        st[j] = st[j + 1];
-                        st[j + 1] = temp;
-                    }
-                }
-            }
-        }
-
-    static void Main(string[] args)
-        {
-            Student[] st = new Student[stringCount()];
-
-    readFromFile(ref st);
-
-    sort(ref st);for(
-
-    int i = 0;i<st.Length;i++)Console.WriteLine(st[i].ToString()+"\n==================");
-}}
+}
